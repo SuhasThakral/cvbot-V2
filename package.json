@@ -1,0 +1,33 @@
+{
+  "name": "cv-chatbot",
+  "version": "1.0.0",
+  "description": "Intelligent CV Chatbot with AI integration and cost tracking",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "start": "python -m http.server 8000",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "chatbot",
+    "cv",
+    "resume",
+    "ai",
+    "perplexity",
+    "javascript",
+    "vercel"
+  ],
+  "author": "Suhas Thakral",
+  "license": "MIT",
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SuhasThakral/cvBot"
+  },
+  "homepage": "https://cv-chatbot.vercel.app"
+}
