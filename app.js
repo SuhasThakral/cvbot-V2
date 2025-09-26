@@ -2,7 +2,7 @@
 class CVChatbot {
     constructor() {
         this.resumeContent = `SUHAS THAKRAL
-📧 suhas.thakral@whu.edu
+📧 [suhas.thakral@whu.edu](mailto:suhas.thakral@whu.edu)
 Head of Business Intelligence & AI
 
 PROFESSIONAL SUMMARY
@@ -78,11 +78,9 @@ Bachelor of Arts (B.A.), Economics | Delhi University Hansraj College | 2011 - 2
 
         this.costPerQuestion = 0.05;
 
-        // API Configuration
-        this.PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
+        // API Configuration - removed direct Perplexity API calls
         this.SUPABASE_URL = window.SUPABASE_URL || process.env.SUPABASE_URL;
         this.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
-        this.PERPLEXITY_API_KEY = window.PERPLEXITY_API_KEY || process.env.PERPLEXITY_API_KEY;
 
         // Initialize Supabase client
         if (this.SUPABASE_URL && this.SUPABASE_ANON_KEY && window.supabase) {
@@ -288,7 +286,7 @@ Bachelor of Arts (B.A.), Economics | Delhi University Hansraj College | 2011 - 2
         this.showTypingIndicator();
 
         try {
-            // Generate response using Perplexity API
+            // Generate response using API endpoint
             const response = await this.generateResponseWithPerplexity(message);
             this.hideTypingIndicator();
             await this.addMessageWithTyping(response, 'assistant');
@@ -327,18 +325,12 @@ Bachelor of Arts (B.A.), Economics | Delhi University Hansraj College | 2011 - 2
     }
 
     async generateResponseWithPerplexity(question) {
-        if (!this.PERPLEXITY_API_KEY) {
-            throw new Error('Perplexity API key not configured');
-        }
-
-        const response = await fetch(this.PERPLEXITY_API_URL, {
+        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${this.PERPLEXITY_API_KEY}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'llama-3.1-sonar-small-128k-online',
                 messages: [
                     {
                         role: 'system',
@@ -352,20 +344,16 @@ Answer questions about Suhas's experience, skills, education, achievements, and 
                         role: 'user',
                         content: question
                     }
-                ],
-                max_tokens: 500,
-                temperature: 0.7,
-                top_p: 0.9,
-                stream: false
+                ]
             })
         });
 
         if (!response.ok) {
-            throw new Error(`Perplexity API error: ${response.status}`);
+            throw new Error(`API error: ${response.status}`);
         }
 
         const data = await response.json();
-        return data.choices[0].message.content;
+        return data.content;
     }
 
     addMessageToDOM(content, type, timestamp = null, animate = true) {
@@ -524,7 +512,7 @@ Answer questions about Suhas's experience, skills, education, achievements, and 
 
         // Location/Contact queries
         if (question.includes('location') || question.includes('where') || question.includes('based') || question.includes('contact') || question.includes('email')) {
-            return "You can contact Suhas at suhas.thakral@whu.edu. Based on his experience with companies across different regions and his educational background, he has worked internationally.";
+            return "You can contact Suhas at [suhas.thakral@whu.edu](mailto:suhas.thakral@whu.edu). Based on his experience with companies across different regions and his educational background, he has worked internationally.";
         }
 
         // AI/Automation specific queries
